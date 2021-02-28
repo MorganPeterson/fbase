@@ -1,3 +1,3 @@
 # F Base
 
-Unix utililities written in [https://fennel-lang.org/](Fennel).
+Unix utililities written in [Fennel](https://fennel-lang.org/).
