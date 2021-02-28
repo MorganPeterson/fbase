@@ -1,7 +1,9 @@
 (fn usage []
+  "Print usage string"
   (io.write (string.format "usage: %s [year]\n" (. arg 0))))
 
 (fn print-cal [year]
+  "Main function that prints calendar"
   (let [months ["JANUARY" "FEBRUARY" "MARCH" "APRIL" "MAY" "JUNE" "JULY"
                 "AUGUST" "SEPTEMBER" "OCTOBER" "NOVEMBER" "DECEMBER"]
         title "MO TU WE TH FR SA SU"
@@ -16,11 +18,13 @@
       (tset daysPerMonth 2 29))
 
     (fn center [str width]
+      "Center the calendar"
       (let [fill1 (math.floor (/ (- width (str:len)) 2))
             fill2 (- (- width (str:len)) fill1)]
         (.. (.. (string.rep " " fill1) str) (string.rep " " fill2))))
 
     (fn make-month [name skip days]
+      "Write a single month"
       (var cal [(center name monthWidth) title])
       (var curday (- 1 skip))
       (var done? false)
@@ -53,6 +57,7 @@
         (io.write (.. (table.concat line (string.rep " " sep)) "\n"))))))
 
 (fn main []
+  "Main function"
   (if (~= (# arg) 1)
     (usage)
     (print-cal (. arg 1))))

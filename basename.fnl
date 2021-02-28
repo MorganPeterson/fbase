@@ -1,10 +1,13 @@
 (fn usage []
+  "Print usage string"
   (io.write (string.format "usage: %s path [suffix]\n" (. arg 0))))
 
 (fn basename [str]
+  "Regex string that strips path down to last file name"
   (str:gsub "(.*/)(.*)" "%2"))
 
 (fn main []
+  "main function"
   (if (not (or (= (# arg) 1) (= (# arg) 2)))
     (usage)
     (= (# arg) 2)
