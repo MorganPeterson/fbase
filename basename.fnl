@@ -1,5 +1,5 @@
 (fn usage []
-  (string.format "usage: %s path [suffix]" (. arg 0)))
+  (io.write (string.format "usage: %s path [suffix]\n" (. arg 0))))
 
 (fn basename [str]
   (str:gsub "(.*/)(.*)" "%2"))
@@ -10,8 +10,8 @@
     (= (# arg) 2)
     (let [p (basename (. arg 1))]
       (let [(s _) (p:gsub (string.format "%%.%s" (. arg 2)) "")]
-        s))
+        (io.write (.. s "\n"))))
     (let [(s _) (basename (. arg 1))]
-      s)))
+      (io.write (.. s "\n")))))
 
-(print (main))
+(main)
