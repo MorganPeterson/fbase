@@ -21,9 +21,8 @@
   (if (= (# arg) 0)
     (usage)
     (each [_ filename (ipairs arg)]
-      (let [(file err) (io.open filename "rb")]
-        (if file
-          (process-file file filename)
-          (error (.. filename ": " err)))))))
+      (pcall #(with-open [file (io.open filename "rb")]
+        (process-file file filename)
+        (error (.. filename ": " "io error")))))))
 
 (main)
