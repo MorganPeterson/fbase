@@ -7,9 +7,10 @@
   (if (not (> (# arg) 0))
     (usage)
     (each [_ filename (ipairs arg)]
-      (let [(file err) (io.open filename "rb")]
-        (if file
+      (let [(ok err)
+        (pcall #(with-open [file (io.open filename :rb)]
           (io.write (file:read "*a"))
-          (error (.. filename ": " err)))))))
+          (error :filename)))]
+        err))))
 
 (main)
