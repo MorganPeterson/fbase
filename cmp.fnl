@@ -1,18 +1,26 @@
 (local arg-parse (require :args))
 
 (fn usage []
-  "Print usage"
-  (io.write (string.format "usage: %s [-v|-s] file1 file2\n" (. arg 0))))
+  "Print usage"1
+  (io.write (string.format "usage: %s [-v | -s] file1 file2\n" (. arg 0))))
 
-(fn eo-file [filename flag]
+(fn eo-file [filename byte flag]
+  "end of file print out"
   (if (not flag)
-    (io.write (string.format "cmp: EOF on %s\n" filename)))
+    (io.write (string.format "cmp: EOF on %s after byte %u\n" filename (- byte 1))))
   true)
 
 (fn diff-file [fn1 fn2 bytes line flag]
+  "at diff print out"
   (if (not flag)
     (io.write (string.format "%s %s differ: byte %s, line %s\n" fn1 fn2 bytes line)))
   true)
+
+(fn get-file-name [b1 b2 fn1 fn2]
+  (if (= b1 nil)
+    fn1
+    (= b2 nil)
+    fn2))
 
 (fn process-files [fd1 fd2 fn1 fn2 flags]
   (var done? false)
@@ -28,7 +36,7 @@
           (= b1 "\n")
           (set line (+ line 1)))
         (or (= b1 nil) (= b2 nil))
-        (set done? (eo-file fn1 (. flags "s")))
+        (set done? (eo-file (get-file-name b1 b2 fn1 fn2) byte (. flags "s")))
         (not (. flags "v"))
         (set differ? (diff-file fn1 fn2 byte line (. flags "s")))
         (io.write (string.format "%4u %3o %3o\n" byte (string.byte b1) (string.byte b2))))
