@@ -1,8 +1,20 @@
+(local arg-parse (require :args))
+
 (fn usage []
   "Print usage"
-  (io.write (string.format "usage: %s file1 file2\n" (. arg 0))))
+  (io.write (string.format "usage: %s [-v|-s] file1 file2\n" (. arg 0))))
 
-(fn process-files [fd1 fd2 fn1 fn2]
+(fn eo-file [filename flag]
+  (if (not flag)
+    (io.write (string.format "cmp: EOF on %s\n" filename)))
+  true)
+
+(fn diff-file [fn1 fn2 bytes line flag]
+  (if (not flag)
+    (io.write (string.format "%s %s differ: byte %s, line %s\n" fn1 fn2 bytes line)))
+  true)
+
+(fn process-files [fd1 fd2 fn1 fn2 flags]
   (var done? false)
   (var differ? false)
   (var line 1)
@@ -10,29 +22,29 @@
   (while (and (not done?) (not differ?))
     (let [b1 (fd1:read 1)
           b2 (fd2:read 1)]
-      (if (and (= b1 nil) (= b2 nil))
-        (set done? true)
-        (~= b1 b2)
-        (set differ? true))
-      
-      (when (and (not done?) (not differ?))
-        (when (= b1 "\n")
+      (if (= b1 b2)
+        (if (= b1 nil)
+          (set done? true)
+          (= b1 "\n")
           (set line (+ line 1)))
-        (set byte (+ byte 1)))))
-  (if differ?
-    (io.write (string.format "%s %s differ: byte %s, line %s\n" fn1 fn2 byte line))))
+        (or (= b1 nil) (= b2 nil))
+        (set done? (eo-file fn1 (. flags "s")))
+        (not (. flags "v"))
+        (set differ? (diff-file fn1 fn2 byte line (. flags "s")))
+        (io.write (string.format "%4u %3o %3o\n" byte (string.byte b1) (string.byte b2))))
+      (set byte (+ byte 1))))
+  (not differ?))
+
   
-(fn read-files [f1 f2]
-  (let [(_ err)
-    (pcall #(with-open [fd1 (io.open f1 :rb)
-                        fd2 (io.open f2 :rb)]
-      (process-files fd1 fd2 f1 f2)
-      (error :io-error)))]
-    err))
+(fn read-files [f1 f2 flags]
+  (with-open [fd1 (io.open f1 :rb)
+              fd2 (io.open f2 :rb)]
+    (process-files fd1 fd2 f1 f2 flags)))
 
 (fn main []
-  (if (not (= (# arg) 2))
+  (let [args (arg-parse arg)]
+  (if (or (not (= (# args.args) 2)) (and (. args.flags "v") (. args.flags "s")))
     (usage)
-    (read-files (. arg 1) (. arg 2))))
+    (read-files (. args.args 1) (. args.args 2) args.flags))))
 
 (main)
