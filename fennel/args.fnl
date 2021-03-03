@@ -8,4 +8,3 @@
       (table.insert a (. args i))
       ))
   {:flags f :args a})
-

@@ -56,3 +56,4 @@
     (read-files (. args.args 1) (. args.args 2) args.flags))))
 
 (main)
+
