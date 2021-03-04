@@ -1,16 +1,14 @@
 (fn usage []
   "Print usage string"
-  (io.write (string.format "usage: %s [file ...]\n" (. arg 0))))
+  (io.write "requires one or more files\n"))
 
-(fn main []
+(fn cat [...]
   "Main function"
-  (if (not (> (# arg) 0))
+  (if (not ...)
     (usage)
-    (each [_ filename (ipairs arg)]
+    (each [_ filename (ipairs ...)]
       (let [(ok err)
         (pcall #(with-open [file (io.open filename :rb)]
           (io.write (file:read "*a"))
           (error :filename)))]
         err))))
-
-(main)
