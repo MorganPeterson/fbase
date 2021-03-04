@@ -1,21 +1,21 @@
-# F Base
+# F _all your_ Base _s_
 
-Unix core utilities written in [Fennel](https://fennel-lang.org/).
+Unix core utilities written in [Fennel](https://fennel-lang.org/), converted to [Lua](https://lua.org/) and run in a VM in [Zig](https://ziglang.org/).
 
-This is a hobby project to learn Fennel by making unix core utilities. It is \
-very alpha and may never move beyond that point.
+This is a hobby project to learn Fennel and Zig by making unix core utilities then run them in Zig. It is very alpha and may never move beyond that point.
 
 ## Requirements
 
 [Lua](https://lua.org/) >= 5.3\
 [LuaRocks](https://luarocks.org/) >= 3.5\
-[Fennel](https://fennel-lang.org/) >= 0.8
+[Fennel](https://fennel-lang.org/) >= 0.8\
+[Zig](https://ziglang.org) > 0.7.1
 
 ## Current Roadmap
 
-This list may change at any time
+This list changes all the time
 
-- [ ] cols
+- [ ] col
 - [ ] cp
 - [ ] cut
 - [ ] date
