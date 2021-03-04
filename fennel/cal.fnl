@@ -1,6 +1,6 @@
 (fn usage []
   "Print usage string"
-  (io.write (string.format "usage: %s [year]\n" (. arg 0))))
+  (io.write "need to pass a year\n"))
 
 (fn print-cal [year]
   "Main function that prints calendar"
@@ -56,10 +56,8 @@
           (tset line m (. (. calendar (+ (* q 3) m)) l)))
         (io.write (.. (table.concat line (string.rep " " sep)) "\n"))))))
 
-(fn main []
+(fn calendar [year]
   "Main function"
-  (if (~= (# arg) 1)
+  (if (not year)
     (usage)
-    (print-cal (. arg 1))))
-
-(main)
+    (print-cal year)))

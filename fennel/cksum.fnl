@@ -1,6 +1,6 @@
 (fn usage []
   "Print usage"
-  (io.write (string.format "usage %s: [file ...]\n" (. arg 0))))
+  (io.write "need at least one file name passed\n"))
 
 (fn crc-32 [file]
   " return crc32 checksum of file using no lookup table"
@@ -16,13 +16,11 @@
   (let [file (fd:read "*a")]
     (io.write (.. (crc-32 file) " " (# file) " " filename "\n"))))
 
-(fn main []
+(fn cksum [...]
   "main function"
-  (if (= (# arg) 0)
+  (if (not ...)
     (usage)
-    (each [_ filename (ipairs arg)]
+    (each [_ filename (ipairs ...)]
       (pcall #(with-open [file (io.open filename "rb")]
         (process-file file filename)
         (error (.. filename ": " "io error")))))))
-
-(main)
