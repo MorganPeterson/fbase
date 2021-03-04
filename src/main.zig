@@ -1,10 +1,11 @@
 const std = @import("std");
+const fs = std.fs;
+const warn = std.debug.warn;
 const builtin = @import("builtin");
 const c = @cImport({
-    @cInclude("lauxlib.h");
     @cInclude("lua.h");
-    @cInclude("luaconf.h");
     @cInclude("lualib.h");
+    @cInclude("lauxlib.h");
 });
 
 export fn add(s: ?*c.lua_State) c_int {
@@ -17,7 +18,7 @@ export fn add(s: ?*c.lua_State) c_int {
     return 1;
 }
 
-pub fn main() void {
+pub fn main() !void {
     var s = c.luaL_newstate();
     c.luaL_openlibs(s);
 
@@ -25,9 +26,21 @@ pub fn main() void {
     c.lua_pushcclosure(s, add, 0);
     c.lua_setglobal(s, "zig_add");
 
-    // TODO translate-c: luaL_dostring
-    _ = c.luaL_loadstring(s, "print(zig_add(3, 5))");
+    var filename = "load_scripts.lua";
 
-    // TODO translate-c: lua_pcall
-    _ = c.lua_pcallk(s, 0, c.LUA_MULTRET, 0, 0, null);
+    // TODO translate-c: luaL_dostring
+    var err1 = (c.luaL_loadfilex(s, filename, null) != c.LUA_OK) or (c.lua_pcallk(s, 0, c.LUA_MULTRET, 0, 0, null) != c.LUA_OK);
+    if (err1) {
+        var crap = c.lua_tolstring(s, -1, null);
+        warn("error {s}\n", .{crap});
+    }
+
+    // TODO translate-c: luaL_dostring
+    var err2 = (c.luaL_loadstring(s, "cal(1976)") != c.LUA_OK) or (c.lua_pcallk(s, 0, c.LUA_MULTRET, 0, 0, null) != c.LUA_OK);
+    if (err2) {
+        var crap = c.lua_tolstring(s, -1, null);
+        warn("second load string: {s}\n", .{crap});
+    }
+
+    c.lua_close(s);
 }

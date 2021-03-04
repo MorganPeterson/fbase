@@ -47,7 +47,6 @@ pub fn build(b: *Builder) void {
         "ltable.c",
         "ltablib.c",
         "ltm.c",
-        "lua.c",
         "luac.c",
         "lundump.c",
         "lutf8lib.c",

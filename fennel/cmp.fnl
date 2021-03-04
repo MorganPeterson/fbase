@@ -1,8 +1,6 @@
-(local arg-parse (require :args))
-
 (fn usage []
   "Print usage"1
-  (io.write (string.format "usage: %s [-v | -s] file1 file2\n" (. arg 0))))
+  (io.write "requires two files and optional options\n"))
 
 (fn eo-file [filename byte flag]
   "end of file print out"
@@ -49,11 +47,7 @@
               fd2 (io.open f2 :rb)]
     (process-files fd1 fd2 f1 f2 flags)))
 
-(fn main []
-  (let [args (arg-parse arg)]
-  (if (or (not (= (# args.args) 2)) (and (. args.flags "v") (. args.flags "s")))
+(fn main [file1 file2 ...]
+  (if (not (and file1 file2))
     (usage)
-    (read-files (. args.args 1) (. args.args 2) args.flags))))
-
-(main)
-
+    (read-files file1 file2 ...)))

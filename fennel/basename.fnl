@@ -1,20 +1,19 @@
-(fn usage []
+(fn usage [args]
   "Print usage string"
-  (io.write (string.format "usage: %s path [suffix]\n" (. arg 0))))
+  (io.write (string.format "need a path and an optional suffix\n")))
 
-(fn basename [str]
+(fn get-name [str]
   "Regex string that strips path down to last file name"
   (str:gsub "(.*/)(.*)" "%2"))
 
-(fn main []
+(fn basename [path ...]
   "main function"
-  (if (not (or (= (# arg) 1) (= (# arg) 2)))
+  (if (not path)
     (usage)
-    (= (# arg) 2)
-    (let [p (basename (. arg 1))]
-      (let [(s _) (p:gsub (string.format "%%.%s" (. arg 2)) "")]
+    (> (# ...) 0)
+    (let [p (get-name path)]
+      (let [(s _) (p:gsub (string.format "%%.%s" (. ...)) "")]
         (io.write (.. s "\n"))))
-    (let [(s _) (basename (. arg 1))]
+    (let [(s _) (get-name (. path))]
       (io.write (.. s "\n")))))
 
-(main)
