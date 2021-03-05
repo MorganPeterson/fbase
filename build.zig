@@ -15,48 +15,6 @@ pub fn build(b: *Builder) void {
     exe.setTarget(target);
     exe.setBuildMode(mode);
 
-    exe.addIncludeDir("lua-5.4.2/src");
-
-    const cflags = [_][]const u8{"-std=gnu99 -DLUA_COMPAT_5_3"};
-    const lua_c_files = [_][]const u8{
-        "lapi.c",
-        "lauxlib.c",
-        "lbaselib.c",
-        "lcode.c",
-        "lcorolib.c",
-        "lctype.c",
-        "ldblib.c",
-        "ldebug.c",
-        "ldo.c",
-        "ldump.c",
-        "lfunc.c",
-        "lgc.c",
-        "linit.c",
-        "liolib.c",
-        "llex.c",
-        "lmathlib.c",
-        "lmem.c",
-        "loadlib.c",
-        "lobject.c",
-        "lopcodes.c",
-        "loslib.c",
-        "lparser.c",
-        "lstate.c",
-        "lstring.c",
-        "lstrlib.c",
-        "ltable.c",
-        "ltablib.c",
-        "ltm.c",
-        "luac.c",
-        "lundump.c",
-        "lutf8lib.c",
-        "lvm.c",
-        "lzio.c",
-    };
-
-    inline for (lua_c_files) |c_file| {
-        exe.addCSourceFile(c_file, &cflags);
-    }
     exe.setBuildMode(mode);
 
     exe.install();

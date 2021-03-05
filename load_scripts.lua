@@ -1,4 +1,4 @@
-fennel = require("fennel/fennel")
+fennel = require("fennel")
 table.insert(package.loaders or package.searchers, fennel.searcher)
 
 basename = require("fennel/basename")
